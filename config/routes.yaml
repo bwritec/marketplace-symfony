@@ -9,3 +9,234 @@
 
 controllers:
     resource: routing.controllers
+
+home:
+  path: /
+  controller: App\Controller\HomeController::index
+  methods: [GET]
+
+blank:
+  path: /blank
+  controller: App\Controller\HomeController::blank
+  methods: [GET]
+
+product_show:
+  path: /product/{id}
+  controller: App\Controller\ProductController::show
+  methods: [GET]
+  requirements:
+    id: '\d+'
+
+install_migrate_get:
+  path: /install/database/migrate
+  controller: App\Controller\InstallController::migrate
+  methods: [GET]
+
+install_migrate_post:
+  path: /install/database/migrate
+  controller: App\Controller\InstallController::migrateInstall
+  methods: [POST]
+
+install_admin_get:
+  path: /install/account/admin
+  controller: App\Controller\InstallController::admin
+  methods: [GET]
+
+install_admin_post:
+  path: /install/account/admin
+  controller: App\Controller\InstallController::adminMake
+  methods: [POST]
+
+frete_calcular:
+  path: /frete/calcular
+  controller: App\Controller\FreteController::calcular
+  methods: [GET]
+
+favorites_add:
+  path: /favorites/add
+  controller: App\Controller\FavoriteController::add
+  methods: [POST]
+
+favorites_remove:
+  path: /favorites/remove
+  controller: App\Controller\FavoriteController::remove
+  methods: [POST]
+
+register_get:
+  path: /register
+  controller: App\Controller\RegisterController::index
+  methods: [GET]
+
+register_post:
+  path: /register
+  controller: App\Controller\RegisterController::store
+  methods: [POST]
+
+login_get:
+  path: /login
+  controller: App\Controller\LoginController::index
+  methods: [GET]
+
+login_post:
+  path: /login
+  controller: App\Controller\LoginController::auth
+  methods: [POST]
+
+logout:
+  path: /logout
+  controller: App\Controller\LoginController::logout
+  methods: [GET]
+
+forgot_get:
+  path: /forgot
+  controller: App\Controller\PasswordController::forgot
+  methods: [GET]
+
+forgot_post:
+  path: /forgot
+  controller: App\Controller\PasswordController::sendResetLink
+  methods: [POST]
+
+reset:
+  path: /reset/{token}
+  controller: App\Controller\PasswordController::reset
+  methods: [GET]
+
+reset_password:
+  path: /reset-password
+  controller: App\Controller\PasswordController::updatePassword
+  methods: [POST]
+
+dashboard:
+  path: /dashboard
+  controller: App\Controller\DashboardController::index
+  methods: [GET]
+
+env_get:
+  path: /dashboard/env
+  controller: App\Controller\EnvController::index
+  methods: [GET]
+
+env_post:
+  path: /dashboard/env
+  controller: App\Controller\EnvController::save
+  methods: [POST]
+
+contact_get:
+  path: /dashboard/contact
+  controller: App\Controller\PhoneController::index
+  methods: [GET]
+
+contact_post:
+  path: /dashboard/contact
+  controller: App\Controller\PhoneController::save
+  methods: [POST]
+
+address_get:
+  path: /dashboard/address
+  controller: App\Controller\AddressController::index
+  methods: [GET]
+
+address_post:
+  path: /dashboard/address
+  controller: App\Controller\AddressController::save
+  methods: [POST]
+
+categories_index:
+  path: /dashboard/categories
+  controller: App\Controller\CategoryController::index
+  methods: [GET]
+
+categories_create:
+  path: /dashboard/categories/create
+  controller: App\Controller\CategoryController::create
+  methods: [GET]
+
+categories_store:
+  path: /dashboard/categories/store
+  controller: App\Controller\CategoryController::store
+  methods: [POST]
+
+categories_edit:
+  path: /dashboard/categories/edit/{id}
+  controller: App\Controller\CategoryController::edit
+  methods: [GET]
+  requirements:
+    id: '\d+'
+
+categories_update:
+  path: /dashboard/categories/update/{id}
+  controller: App\Controller\CategoryController::update
+  methods: [POST]
+  requirements:
+    id: '\d+'
+
+categories_delete:
+  path: /dashboard/categories/delete/{id}
+  controller: App\Controller\CategoryController::delete
+  methods: [GET]
+  requirements:
+    id: '\d+'
+
+links_index:
+  path: /dashboard/links
+  controller: App\Controller\LinkController::index
+  methods: [GET]
+
+links_create:
+  path: /dashboard/links/create
+  controller: App\Controller\LinkController::create
+  methods: [GET]
+
+links_store:
+  path: /dashboard/links/store
+  controller: App\Controller\LinkController::store
+  methods: [POST]
+
+links_edit:
+  path: /dashboard/links/edit/{id}
+  controller: App\Controller\LinkController::edit
+  methods: [GET]
+  requirements:
+    id: '\d+'
+
+links_update:
+  path: /dashboard/links/update/{id}
+  controller: App\Controller\LinkController::update
+  methods: [POST]
+  requirements:
+    id: '\d+'
+
+links_delete:
+  path: /dashboard/links/delete/{id}
+  controller: App\Controller\LinkController::delete
+  methods: [GET]
+  requirements:
+    id: '\d+'
+
+sell_index:
+  path: /dashboard/sell
+  controller: App\Controller\SellController::index
+  methods: [GET]
+
+sell_store:
+  path: /dashboard/sell/store
+  controller: App\Controller\SellController::store
+  methods: [POST]
+
+products_index:
+  path: /dashboard/products
+  controller: App\Controller\ProductsController::index
+  methods: [GET]
+
+products_delete:
+  path: /dashboard/products/delete/{id}
+  controller: App\Controller\ProductsController::delete
+  methods: [GET]
+  requirements:
+    id: '\d+'
+
+favorites_list:
+  path: /dashboard/favorites
+  controller: App\Controller\FavoriteController::list
+  methods: [GET]

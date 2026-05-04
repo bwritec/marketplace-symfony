@@ -1,0 +1,11 @@
+<h1>{{ title }}</h1>
+
+{% for product in last_products %}
+    <div>
+        <h2>{{ product.name }}</h2>
+
+        {% if product.thumbnails|length > 0 %}
+            <img src="/uploads/{{ product.thumbnails[0].name }}">
+        {% endif %}
+    </div>
+{% endfor %}
