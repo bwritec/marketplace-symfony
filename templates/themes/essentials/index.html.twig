@@ -1,11 +1,51 @@
-<h1>{{ title }}</h1>
+{% extends 'themes/essentials/layouts/default.html.twig' %}
 
-{% for product in last_products %}
-    <div>
-        <h2>{{ product.name }}</h2>
+{% block content %}
+<div class="content" style="margin-bottom: 61px;">
+    <div class="container">
+        <div class="row">
+            {% if last_products is not empty %}
+                <div class="col-12">
+                    <h1 class="mb-3">
+                        Últimos Produtos
+                    </h1>
+                </div>
 
-        {% if product.thumbnails|length > 0 %}
-            <img src="/uploads/{{ product.thumbnails[0].name }}">
-        {% endif %}
+                {% for p in last_products %}
+                    <div class="col-6 col-md-4 col-lg-2 mb-3">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body" style="padding: 1rem;">
+                                <a href="{{ path('product_show', {'id': p.id}) }}" style="text-decoration: none;">
+
+                                    <img src="{{ asset(p.thumbnail ? p.thumbnail : 'dist/photos/no-image.png') }}"
+                                         alt="{{ p.name }}"
+                                         style="width: 100%;">
+
+                                    <span class="mb-2" style="display: block; color: #000;">
+                                        {{ p.name }}
+                                    </span>
+
+                                    <p class="fw-bold" style="color: #333;">
+                                        R$
+                                        {% set taxa = app_rate|default(0) %}
+                                        {% set price = p.price %}
+                                        {% set price_final = price + (price * (taxa / 100)) %}
+
+                                        {{ price_final|number_format(2, ',', '.') }}
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <p class="text-muted">
+                        Nenhum produto encontrado.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
     </div>
-{% endfor %}
+</div>
+{% endblock %}

@@ -1,6 +1,17 @@
 twig:
     file_name_pattern: '*.twig'
 
+    globals:
+        # APP
+        APP_NAME: '%env(APP_NAME)%'
+        APP_RATE: '%env(float:APP_RATE)%'
+        APP_BASEURL: '%env(APP_BASEURL)%'
+
+        # THEMES
+        APP_THEME: '%env(APP_THEME)%'
+        APP_THEME_COLOR: '%env(APP_THEME_COLOR)%'
+        APP_THEME_SYSTEM: '%env(APP_THEME_SYSTEM)%'
+
 when@test:
     twig:
         strict_variables: true
