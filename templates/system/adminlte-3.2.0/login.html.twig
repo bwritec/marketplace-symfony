@@ -1,0 +1,139 @@
+{% set title = APP_NAME|replace({' ': ''}) %}
+{% set split_index = -1 %}
+
+{% for char in title|split('') %}
+    {% if loop.index0 > 0 and char matches '/[A-Z]/' and split_index == -1 %}
+        {% set split_index = loop.index0 %}
+    {% endif %}
+{% endfor %}
+
+{% if split_index > 0 %}
+    {% set title_first = title|slice(0, split_index) %}
+    {% set title_last = title|slice(split_index) %}
+{% else %}
+    {% set title_first = title %}
+    {% set title_last = '' %}
+{% endif %}
+
+{% extends 'system/adminlte-3.2.0/layouts/auth.html.twig' %}
+
+{% block content %}
+<div class="login-box">
+    <div class="login-logo">
+        <a href="{{ path('home') }}">
+            <b>{{ title_first }}</b>{{ title_last }}
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body login-card-body">
+            <p class="login-box-msg">
+                Faça login para iniciar sua sessão.
+            </p>
+
+            <form action="{{ path('login_auth') }}" method="post">
+                <input type="hidden" name="_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="mb-3">
+                    <label class="form-label mb-0">
+                        CPF
+                    </label>
+
+                    <div class="input-group">
+                        <input type="text"
+                               name="cpf"
+                               id="cpf"
+                               maxlength="14"
+                               class="form-control {% if errors.cpf is defined %}is-invalid{% endif %}"
+                               value="{{ old.cpf|default('') }}">
+
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <i class="fas fa-passport"></i>
+                            </div>
+                        </div>
+
+                        {% if errors.cpf is defined %}
+                            <div class="invalid-feedback">
+                                {{ errors.cpf }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label mb-0">
+                        Senha
+                    </label>
+
+                    <div class="input-group">
+                        <input type="password"
+                               name="password"
+                               class="form-control {% if errors.password is defined %}is-invalid{% endif %}">
+
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+
+                        {% if errors.password is defined %}
+                            <div class="invalid-feedback">
+                                {{ errors.password }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-8">
+                        <div class="icheck-primary">
+                            <input type="checkbox" id="remember">
+
+                            <label for="remember">
+                                Lembre de mim
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            Entrar
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <p class="mb-1">
+                <a href="{{ path('forgot') }}">
+                    Esqueci minha senha
+                </a>
+            </p>
+
+            <p class="mb-0">
+                <a href="{{ path('register') }}" class="text-center">
+                    Criar uma nova conta
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.getElementById('cpf').addEventListener('input', function (e)
+    {
+        let value = e.target.value.replace(/\D/g, '');
+
+        if (value.length > 11)
+        {
+            value = value.slice(0, 11);
+        }
+
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
+        e.target.value = value;
+    });
+</script>
+{% endblock %}
