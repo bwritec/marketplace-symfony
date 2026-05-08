@@ -62,22 +62,22 @@ favorites_remove:
   controller: App\Controller\FavoriteController::remove
   methods: [POST]
 
-register_get:
+register:
   path: /register
   controller: App\Controller\RegisterController::index
   methods: [GET]
 
-register_post:
+register_store:
   path: /register
   controller: App\Controller\RegisterController::store
   methods: [POST]
 
-login_get:
+login:
   path: /login
   controller: App\Controller\LoginController::index
   methods: [GET]
 
-login_post:
+login_auth:
   path: /login
   controller: App\Controller\LoginController::auth
   methods: [POST]
@@ -87,12 +87,12 @@ logout:
   controller: App\Controller\LoginController::logout
   methods: [GET]
 
-forgot_get:
+forgot:
   path: /forgot
   controller: App\Controller\PasswordController::forgot
   methods: [GET]
 
-forgot_post:
+forgot_send_reset_link:
   path: /forgot
   controller: App\Controller\PasswordController::sendResetLink
   methods: [POST]
@@ -112,37 +112,37 @@ dashboard:
   controller: App\Controller\DashboardController::index
   methods: [GET]
 
-env_get:
+env:
   path: /dashboard/env
   controller: App\Controller\EnvController::index
   methods: [GET]
 
-env_post:
+env_save:
   path: /dashboard/env
   controller: App\Controller\EnvController::save
   methods: [POST]
 
-contact_get:
+contact:
   path: /dashboard/contact
   controller: App\Controller\PhoneController::index
   methods: [GET]
 
-contact_post:
+contact_save:
   path: /dashboard/contact
   controller: App\Controller\PhoneController::save
   methods: [POST]
 
-address_get:
+address:
   path: /dashboard/address
   controller: App\Controller\AddressController::index
   methods: [GET]
 
-address_post:
+address_save:
   path: /dashboard/address
   controller: App\Controller\AddressController::save
   methods: [POST]
 
-categories_index:
+categories:
   path: /dashboard/categories
   controller: App\Controller\CategoryController::index
   methods: [GET]
@@ -178,7 +178,7 @@ categories_delete:
   requirements:
     id: '\d+'
 
-links_index:
+links:
   path: /dashboard/links
   controller: App\Controller\LinkController::index
   methods: [GET]
@@ -214,7 +214,7 @@ links_delete:
   requirements:
     id: '\d+'
 
-sell_index:
+sell:
   path: /dashboard/sell
   controller: App\Controller\SellController::index
   methods: [GET]
@@ -224,7 +224,7 @@ sell_store:
   controller: App\Controller\SellController::store
   methods: [POST]
 
-products_index:
+products:
   path: /dashboard/products
   controller: App\Controller\ProductsController::index
   methods: [GET]
@@ -239,4 +239,9 @@ products_delete:
 favorites_list:
   path: /dashboard/favorites
   controller: App\Controller\FavoriteController::list
+  methods: [GET]
+
+search:
+  path: /search
+  controller: App\Controller\Search::query
   methods: [GET]
