@@ -57,7 +57,7 @@
             /**
              * Dados do formulário
              */
-            $cpf = preg_replace('/[^0-9]/', '', (string) $request->request->get('cpf'));
+            $cpf = trim($request->request->get('cpf'));
             $password = (string) $request->request->get('password');
 
             /**
@@ -70,10 +70,9 @@
                     message: 'O CPF é obrigatório.'
                 ),
 
-                new Assert\Length(
-                    min: 14,
-                    max: 14,
-                    exactMessage: 'O CPF deve ter 14 caracteres.'
+                new Assert\Regex(
+                    pattern: '/^\d{3}\.\d{3}\.\d{3}-\d{2}$/',
+                    message: 'CPF inválido.'
                 )
             ]);
 
@@ -121,7 +120,7 @@
              * Busca usuário pelo CPF
              */
             $user = $userRepository->findOneBy([
-                'cpf' => $cpf
+                'cpf' => preg_replace('/[^0-9]/', '', $cpf)
             ]);
 
             /**
@@ -134,6 +133,7 @@
                     'errors' => [
                         'cpf' => 'CPF ou senha inválidos.'
                     ],
+
                     'old' => [
                         'cpf' => $request->request->get('cpf')
                     ]
