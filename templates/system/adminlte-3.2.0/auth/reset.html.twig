@@ -1,0 +1,92 @@
+{% extends 'system/adminlte-3.2.0/layouts/auth.html.twig' %}
+
+{% block content %}
+
+{% set app_name = APP_NAME|replace({' ': ''}) %}
+
+{% set split_index = 0 %}
+
+{% for char in app_name %}
+    {% if char matches '/[A-Z]/' and not loop.first %}
+        {% set split_index = loop.index0 %}
+    {% endif %}
+{% endfor %}
+
+{% if split_index > 0 %}
+    {% set title_first = app_name|slice(0, split_index) %}
+    {% set title_last = app_name|slice(split_index) %}
+    {% set title_with_subtitle = true %}
+{% else %}
+    {% set title_first = app_name %}
+    {% set title_last = '' %}
+    {% set title_with_subtitle = false %}
+{% endif %}
+
+<div class="login-box">
+    <div class="login-logo">
+        <a href="{{ path('home') }}">
+            <b>{{ title_with_subtitle ? title_first : app_name }}</b>{{ title_with_subtitle ? title_last : '' }}
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body login-card-body">
+            <p class="login-box-msg">
+                Redefinir senha
+            </p>
+
+            {% if error is defined %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form action="{{ path('reset_password') }}" method="post">
+                <input
+                    type="hidden"
+                    name="_csrf_token"
+                    value="{{ csrf_token('reset_password') }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="token"
+                    value="{{ token }}"
+                >
+
+                <div class="mb-3">
+                    <label for="password" class="form-label mb-0">
+                        Nova senha
+                    </label>
+
+                    <div class="input-group">
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            class="form-control {{ errors is defined and errors.password is defined ? 'is-invalid' : '' }}"
+                        >
+
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+
+                        {% if errors is defined and errors.password is defined %}
+                            <div class="invalid-feedback">
+                                {{ errors.password }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    Redefinir senha
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
