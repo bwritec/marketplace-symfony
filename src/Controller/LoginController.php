@@ -5,6 +5,7 @@
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpFoundation\Request;
+    use Symfony\Component\HttpFoundation\RedirectResponse;
     use Symfony\Component\HttpFoundation\Session\SessionInterface;
     use Symfony\Component\Routing\Attribute\Route;
     use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -153,12 +154,17 @@
             return $this->redirectToRoute('dashboard');
         }
 
-        public function logout(): never
+        public function logout(): RedirectResponse
         {
-            /**
-             * O Symfony Security intercepta automaticamente
-             * esta rota.
-             */
-            throw new \LogicException('Logout is handled by Symfony Security.');
+            $this->container->get('security.token_storage')->setToken(null);
+
+            $request = $this->container->get('request_stack')->getCurrentRequest();
+
+            if ($request && $request->hasSession())
+            {
+                $request->getSession()->invalidate();
+            }
+
+            return $this->redirect('/login');
         }
     }
