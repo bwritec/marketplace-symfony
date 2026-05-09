@@ -1,0 +1,95 @@
+{% extends 'system/adminlte-3.2.0/layouts/auth.html.twig' %}
+
+{% block content %}
+
+{% set app_name = APP_NAME|replace({' ': ''}) %}
+
+{% set split_index = 0 %}
+
+{% for char in app_name %}
+    {% if char matches '/[A-Z]/' and not loop.first %}
+        {% set split_index = loop.index0 %}
+    {% endif %}
+{% endfor %}
+
+{% if split_index > 0 %}
+    {% set title_first = app_name|slice(0, split_index) %}
+    {% set title_last = app_name|slice(split_index) %}
+    {% set title_with_subtitle = true %}
+{% else %}
+    {% set title_first = app_name %}
+    {% set title_last = '' %}
+    {% set title_with_subtitle = false %}
+{% endif %}
+
+<div class="login-box">
+    <div class="login-logo">
+        <a href="{{ path('home') }}">
+            <b>{{ title_with_subtitle ? title_first : app_name }}</b>{{ title_with_subtitle ? title_last : '' }}
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body login-card-body">
+            <p class="login-box-msg">
+                Digite seu e-mail para redefinir sua senha
+            </p>
+
+            {% set flash_errors = app.flashes('error') %}
+
+            {% if flash_errors|length > 0 or error is defined %}
+                <div class="alert alert-danger">
+                    {{ flash_errors|length > 0 ? flash_errors|first : error }}
+                </div>
+            {% endif %}
+
+            {% if success is defined %}
+                <div class="alert alert-success">
+                    {{ success }}
+                </div>
+            {% endif %}
+
+            <form action="{{ path('forgot') }}" method="post">
+                <input
+                    type="hidden"
+                    name="_csrf_token"
+                    value="{{ csrf_token('forgot_password') }}"
+                >
+
+                <div class="mb-3">
+                    <label for="email" class="form-label mb-0">
+                        Email
+                    </label>
+
+                    <div class="input-group">
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            class="form-control {{ errors.email is defined ? 'is-invalid' : '' }}"
+                            value="{{ old_email|default('') }}"
+                        >
+
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+
+                        {% if errors.email is defined %}
+                            <div class="invalid-feedback">
+                                {{ errors.email }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    Enviar link
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
