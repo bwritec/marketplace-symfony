@@ -17,12 +17,12 @@
 
     class LoginController extends AbstractController
     {
-        public function index(AuthenticationUtils $authenticationUtils): Response
+        public function index(AuthenticationUtils $authenticationUtils, SessionInterface $session): Response
         {
             /**
              * Se já estiver logado, redireciona.
              */
-            if ($this->getUser())
+            if ($session->get('user'))
             {
                 return $this->redirectToRoute('dashboard');
             }
