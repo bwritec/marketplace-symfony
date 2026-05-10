@@ -780,9 +780,9 @@
                 </div>
 
                 <ul style="padding: 0 1rem;">
-                    {% if app.user %}
+                    {% if app.session.get('user') %}
                         <div class="dropdown">
-                            {% set fullName = app.user.name %}
+                            {% set fullName = app.session.get('user').name %}
                             {% set firstName = fullName|split(' ')|first %}
 
                             <a class="btn btn-link dropdown-toggle"
@@ -962,9 +962,9 @@
                     {% endif %}
 
                     <ul class="actions">
-                        {% if app.user %}
+                        {% if app.session.get('user') %}
                             <div class="dropdown">
-                                {% set fullName = app.user.name %}
+                                {% set fullName = app.session.get('user').name %}
                                 {% set firstName = fullName|split(' ')|first %}
 
                                 <a class="btn btn-link dropdown-toggle"
