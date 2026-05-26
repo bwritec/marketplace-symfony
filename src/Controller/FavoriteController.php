@@ -11,20 +11,36 @@
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpFoundation\RedirectResponse;
+    use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 
     class FavoriteController extends AbstractController
     {
+        /**
+         *
+         */
         private FavoriteRepository $favoriteRepository;
+
+        /**
+         *
+         */
         private ProductRepository $productRepository;
+
+        /**
+         *
+         */
         private ProductThumbnailRepository $thumbnailRepository;
+
+        /**
+         *
+         */
         private EntityManagerInterface $entityManager;
 
-        public function __construct(
-            FavoriteRepository $favoriteRepository,
-            ProductRepository $productRepository,
-            ProductThumbnailRepository $thumbnailRepository,
-            EntityManagerInterface $entityManager
-        ) {
+        /**
+         *
+         */
+        public function __construct(FavoriteRepository $favoriteRepository, ProductRepository $productRepository, ProductThumbnailRepository $thumbnailRepository, EntityManagerInterface $entityManager)
+        {
             $this->favoriteRepository = $favoriteRepository;
             $this->productRepository = $productRepository;
             $this->thumbnailRepository = $thumbnailRepository;
@@ -34,24 +50,28 @@
         /**
          * Adiciona aos favoritos
          */
-        public function add(Request $request): Response
+        public function add(Request $request, SessionInterface $session): Response
         {
             $user = $this->getUser();
 
-            if (!$user) {
-                return $this->redirectToRoute('app_login');
+            if (!$user)
+            {
+                return $this->redirectToRoute('login');
             }
 
             $userId = $request->request->get('user_id');
             $productId = $request->request->get('product_id');
 
-            // Evita duplicados
+            /**
+             * Evita duplicados
+             */
             $exists = $this->favoriteRepository->findOneBy([
                 'user' => $userId,
                 'product' => $productId
             ]);
 
-            if ($exists) {
+            if ($exists)
+            {
                 $this->addFlash('warning', 'Produto já está favoritado.');
 
                 return $this->redirect($request->headers->get('referer'));
@@ -78,12 +98,13 @@
         /**
          * Remove dos favoritos
          */
-        public function remove(Request $request): Response
+        public function remove(Request $request, SessionInterface $session): Response
         {
             $user = $this->getUser();
 
-            if (!$user) {
-                return $this->redirectToRoute('app_login');
+            if (!$user)
+            {
+                return $this->redirectToRoute('login');
             }
 
             $userId = $request->request->get('user_id');
@@ -109,26 +130,27 @@
         /**
          * Lista favoritos do usuário
          */
-        public function list(): Response
+        public function list(SessionInterface $session): Response
         {
-            $user = $this->getUser();
+            $user = $session->get('user');
 
-            if (!$user) {
+            if (!$user)
+            {
                 return $this->redirectToRoute('login');
             }
 
             $favorites = $this->favoriteRepository->findBy([
-                'user' => $user->getId()
+                'user_id' => $user['id']
             ]);
 
             $products = [];
 
-            foreach ($favorites as $fav) {
-
+            foreach ($favorites as $fav)
+            {
                 $product = $fav->getProduct();
 
-                if ($product) {
-
+                if ($product)
+                {
                     $thumbnail = $this->thumbnailRepository->findOneBy([
                         'product' => $product->getId()
                     ]);
@@ -137,7 +159,6 @@
                      * Calcula taxa
                      */
                     $taxa = (float) ($_ENV['APP_RATE'] ?? 0);
-
                     $price = (float) str_replace(
                         ',',
                         '.',
@@ -159,12 +180,10 @@
                 }
             }
 
-            $adminTheme = $_ENV['APP_THEME_SYSTEM'] ?? 'default';
+            $adminTheme = $_ENV['APP_THEME_SYSTEM'];
 
             return $this->render(
-                'system/' .
-                $adminTheme .
-                '/dashboard/favorites.html.twig',
+                'system/' . $adminTheme . '/dashboard/favorites.html.twig',
                 [
                     'title' => 'Favoritos',
                     'page' => 'dashboard.favorites',

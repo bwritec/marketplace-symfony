@@ -1,0 +1,70 @@
+{% extends 'system/' ~ admin_theme ~ '/layouts/dashboard.html.twig' %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>
+                        Favoritos
+                    </h1>
+                </div>
+
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item">
+                            <a href="{{ path('dashboard') }}">
+                                Dashboard
+                            </a>
+                        </li>
+
+                        <li class="breadcrumb-item active">
+                            Favoritos
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        {% if favorites|length == 0 %}
+            <div class="card">
+                <div class="card-body">
+                    Nenhum favorito disponível
+                </div>
+            </div>
+        {% else %}
+            {% for item in favorites %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        {% if item.thumbnail is not empty %}
+                            <div style="float:left;">
+                                <img src="{{ asset(item.thumbnail) }}" class="card-img-top" alt="{{ item.name }}" style="width:150px; margin-right:1rem; display:block;">
+                            </div>
+
+                            <h5 class="card-title">
+                                {{ item.name }}
+                            </h5>
+
+                            {% if item.price is not empty %}
+                                <p class="card-text">
+                                    <strong>
+                                        R$
+                                        {{ item.price|number_format(2, ',', '.') }}
+                                    </strong>
+                                </p>
+                            {% endif %}
+
+                            <a href="{{ path('product_show', { id: item.id }) }}" class="btn btn-primary">
+                                Ver Produto
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
