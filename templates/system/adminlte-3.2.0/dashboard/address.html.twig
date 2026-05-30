@@ -1,0 +1,157 @@
+{% extends 'system/' ~ admin_theme ~ '/layouts/dashboard.html.twig' %}
+
+{% block content %}
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Endereço</h1>
+                </div>
+
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item">
+                            <a href="{{ path('dashboard') }}">
+                                Dashboard
+                            </a>
+                        </li>
+
+                        <li class="breadcrumb-item active">
+                            Endereço
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="card">
+            <div class="card-body">
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                <form id="form-address" action="{{ path('address_save') }}" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token('address_form') }}">
+
+                    <div class="mb-3">
+                        <label for="address" class="form-label">
+                            Endereço
+                        </label>
+
+                        <input type="text" name="address" id="address" class="form-control {{ errors.address is defined ? 'is-invalid' : '' }}" value="{{ address.address ?? '' }}">
+
+                        {% if errors.address is defined %}
+                            <div class="invalid-feedback">
+                                {{ errors.address }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="neighborhood" class="form-label">
+                            Bairro
+                        </label>
+
+                        <input type="text" name="neighborhood" id="neighborhood" class="form-control {{ errors.neighborhood is defined ? 'is-invalid' : '' }}" value="{{ address.neighborhood ?? '' }}">
+
+                        {% if errors.neighborhood is defined %}
+                            <div class="invalid-feedback">
+                                {{ errors.neighborhood }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="city" class="form-label">
+                            Cidade
+                        </label>
+
+                        <input type="text" name="city" id="city" class="form-control {{ errors.city is defined ? 'is-invalid' : '' }}" value="{{ address.city ?? '' }}">
+
+                        {% if errors.city is defined %}
+                            <div class="invalid-feedback">
+                                {{ errors.city }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="state" class="form-label">
+                                Estado (UF)
+                            </label>
+
+                            <input type="text" name="state" id="state" maxlength="2" class="form-control text-uppercase {{ errors.state is defined ? 'is-invalid' : '' }}" value="{{ address.state ?? '' }}">
+
+                            {% if errors.state is defined %}
+                                <div class="invalid-feedback">
+                                    {{ errors.state }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="cep" class="form-label">
+                                CEP
+                            </label>
+
+                            <input type="text" name="cep" id="cep" maxlength="9" class="form-control {{ errors.cep is defined ? 'is-invalid' : '' }}" value="{{ address.cep ?? '' }}" placeholder="00000-000">
+
+                            {% if errors.cep is defined %}
+                                <div class="invalid-feedback">
+                                    {{ errors.cep }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submit-form" class="btn btn-dark">
+                        Salvar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script type="text/javascript">
+    /**
+     * Máscara simples de CEP
+     */
+    $('#cep').on('input', function()
+    {
+        var v = $(this).val().replace(/\D/g, '');
+
+        if (v.length > 8)
+        {
+            v = v.slice(0, 8);
+        }
+
+        if (v.length > 5)
+        {
+            v = v.replace(/^(\d{5})(\d{0,3})/, '$1-$2');
+        }
+
+        $(this).val(v);
+    });
+
+    /**
+     * Remove a mascara de cep quando o usuario clica
+     * no submit.
+     */
+    $('form').on('submit', function()
+    {
+        var cep = $('#cep').val();
+
+        // Remove tudo que não for número
+        cep = cep.replace(/\D/g, '');
+
+        $('#cep').val(cep);
+    });
+</script>
+{% endblock %}
